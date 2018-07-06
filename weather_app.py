@@ -5,9 +5,9 @@ from tkinter import *
 import requests
 import re
 
-i=0
+i=-1
 def url_builder(city_name):
-    user_api = 'cc16b20fbaa6f86f4708777632b093b9'  # Obtain yours form: http://openweathermap.org/
+    user_api = 'xxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
     unit = 'metric'  # For Fahrenheit use imperial, for Celsius use metric, and the default is Kelvin.
     api = 'http://api.openweathermap.org/data/2.5/weather?q='     # Search for your city ID here: http://bulk.openweathermap.org/sample/city.list.json.gz
 
@@ -48,7 +48,7 @@ def data_organizer(raw_api_dict):
     return data
 
 def url_builder2(city_name):
-    user_api = 'cc16b20fbaa6f86f4708777632b093b9'  # Obtain yours form: http://openweathermap.org/
+    user_api = 'xxxxxxxxxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
     unit = 'metric'  # For Fahrenheit use imperial, for Celsius use metric, and the default is Kelvin.
     api = 'http://api.openweathermap.org/data/2.5/forecast?q='  # Search for your city ID here: http://bulk.openweathermap.org/sample/city.list.json.gz
     full_api_url = api + str(city_name) + '&mode=json&units=' + unit + '&APPID=' + user_api
@@ -68,7 +68,7 @@ def data_sep(list_items):
 
 def data_organizer2(raw_list):
     data = dict(
-        date=raw_list[i]['dt_txt'],
+        date=re.sub(r' 00:00:00',"",raw_list[i]['dt_txt']),
         temp=raw_list[i]['main']['temp'],
         temp_max=raw_list[i]['main']['temp_max'],
         temp_min=raw_list[i]['main']['temp_min'],
@@ -83,8 +83,8 @@ def data_organizer2(raw_list):
     return data
 
 def data_output2(data):
-
-    temp_value.config(text=str(data['temp']) + '\xb0' + 'C'+'  @  00:00:00')
+    cur_temp.config(text='Temperature:')
+    temp_value.config(text=str(data['temp']) + '\xb0' + 'C'+' ('+data['date']+' )')
 
     temp_max.config(text=str(data['temp_max']) + '\xb0' + 'C')
 
@@ -95,10 +95,11 @@ def data_output2(data):
 def next_button():
     global i
     i=i+1
-    if i==3:
+    if i==2:
         next.config(state=DISABLED)
     city = city_entry.get()
     data_output2(data_organizer2(data_sep(url_builder2(city))))
+
 
 def data_output(data):
 
@@ -106,10 +107,9 @@ def data_output(data):
         city_lab.grid(row=5, column=0)
         city_data.config(text=data['city']+','+data['country'])
         city_data.grid(row=5, column=1)
-
-        cur_temp = Label(m,text='Current Temperature:')
+        cur_temp.config(text='Current Temperature:')
         cur_temp.grid(row=6,column=0)
-        temp_value.config(text=str(data['temp'])+'\xb0' + 'C')
+        temp_value.config(text=str(data['temp'])+'\xb0' + 'C'+' ('+str(datetime.date.today())+' )')
         temp_value.grid(row=6,column=1)
         temp_max_label=Label(m,text='Max Temperature:')
         temp_max_label.grid(row=7,column=0)
@@ -126,15 +126,17 @@ def data_output(data):
 
 def previous_button():
     global i
-    if i==0:
-        city_name = city_entry.get()
-        data_output(data_organizer(data_fetch(url_builder(city_name))))
-
-    else:
+    if i>0:
         i=i-1
         city = city_entry.get()
         data_output2(data_organizer2(data_sep(url_builder2(city))))
         next.config(state=NORMAL)
+    else:
+        i=-1
+        city_name = city_entry.get()
+        data_output(data_organizer(data_fetch(url_builder(city_name))))
+
+
 
 try:
     m = Tk(className='Weather Forecast')
@@ -144,6 +146,7 @@ try:
     city_entry.grid(row=0,column=1)
     city_data = Label(m)
     country_data= Label(m)
+    cur_temp=Label(m)
     temp_value=Label(m)
     temp_max = Label(m)
     temp_min = Label(m)
