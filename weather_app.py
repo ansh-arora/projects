@@ -7,7 +7,7 @@ import re
 
 i=-1
 def url_builder(city_name):
-    user_api = 'xxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
+    user_api = 'xxxxxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
     unit = 'metric'  # For Fahrenheit use imperial, for Celsius use metric, and the default is Kelvin.
     api = 'http://api.openweathermap.org/data/2.5/weather?q='     # Search for your city ID here: http://bulk.openweathermap.org/sample/city.list.json.gz
 
@@ -48,7 +48,7 @@ def data_organizer(raw_api_dict):
     return data
 
 def url_builder2(city_name):
-    user_api = 'xxxxxxxxxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
+    user_api = 'xxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
     unit = 'metric'  # For Fahrenheit use imperial, for Celsius use metric, and the default is Kelvin.
     api = 'http://api.openweathermap.org/data/2.5/forecast?q='  # Search for your city ID here: http://bulk.openweathermap.org/sample/city.list.json.gz
     full_api_url = api + str(city_name) + '&mode=json&units=' + unit + '&APPID=' + user_api
@@ -84,13 +84,17 @@ def data_organizer2(raw_list):
 
 def data_output2(data):
     cur_temp.config(text='Temperature:')
-    temp_value.config(text=str(data['temp']) + '\xb0' + 'C'+' ('+data['date']+' )')
-
+    temp_value.config(text=str(data['temp']) + '\xb0' + 'C'+' ( '+data['date']+' )')
+    wind_speed.config(text=str(data['wind'])+' km/h')
     temp_max.config(text=str(data['temp_max']) + '\xb0' + 'C')
-
+    pressure.config(text=str(data['pressure'])+' mb')
     temp_min.config(text=str(data['temp_min']) + '\xb0' + 'C')
-
+    humidity.config(text=str(data['humidity']) + '%')
+    sky.config(text=data['sky'])
     previous.config(state=NORMAL,command=previous_button)
+    sunrise_time.config(text='N/A')
+    sunset_time.config(text='N/A')
+
 
 def next_button():
     global i
@@ -107,9 +111,10 @@ def data_output(data):
         city_lab.grid(row=5, column=0)
         city_data.config(text=data['city']+','+data['country'])
         city_data.grid(row=5, column=1)
+
         cur_temp.config(text='Current Temperature:')
         cur_temp.grid(row=6,column=0)
-        temp_value.config(text=str(data['temp'])+'\xb0' + 'C'+' ('+str(datetime.date.today())+' )')
+        temp_value.config(text=str(data['temp'])+'\xb0' + 'C'+' ( '+str(datetime.date.today())+' )')
         temp_value.grid(row=6,column=1)
         temp_max_label=Label(m,text='Max Temperature:')
         temp_max_label.grid(row=7,column=0)
@@ -119,10 +124,40 @@ def data_output(data):
         temp_min_label.grid(row=8, column=0)
         temp_min.config(text=str(data['temp_min']) + '\xb0' + 'C')
         temp_min.grid(row=8, column=1)
+
+        humidity_lab=Label(m,text='Humidity:')
+        humidity_lab.grid(row=9,column=0)
+        humidity.config(text=str(data['humidity'])+'%')
+        humidity.grid(row=9,column=1)
+        pressure_lab=Label(m,text='Pressure:')
+        pressure_lab.grid(row=10,column=0)
+        pressure.config(text=str(data['pressure'])+' mb')
+        pressure.grid(row=10,column=1)
+
+        sky_lab=Label(m,text='Sky:')
+        sky_lab.grid(row=11,column=0)
+        sky.config(text=data['sky'])
+        sky.grid(row=11,column=1)
+
+        wind_lab=Label(m,text='Wind Speed:')
+        wind_lab.grid(row=12,column=0)
+        wind_speed.config(text=str(data['wind'])+' km/h')
+        wind_speed.grid(row=12,column=1)
+
+
+        sunrise_lab.config(text='Sunrise Time:')
+        sunrise_lab.grid(row=13,column=0)
+        sunrise_time.config(text=data['sunrise'])
+        sunrise_time.grid(row=13,column=1)
+        sunset_lab.config(text='Sunset Time:')
+        sunset_lab.grid(row=14,column=0)
+        sunset_time.config(text=data['sunset'])
+        sunset_time.grid(row=14,column=1)
+
         next.config(text='Next Day>>',command=next_button)
-        next.grid(row=9,column=3)
+        next.grid(row=15,column=3)
         previous.config(text='<<Previous Day',state=DISABLED)
-        previous.grid(row=9,column=1)
+        previous.grid(row=15,column=1)
 
 def previous_button():
     global i
@@ -150,6 +185,14 @@ try:
     temp_value=Label(m)
     temp_max = Label(m)
     temp_min = Label(m)
+    humidity=Label(m)
+    pressure=Label(m)
+    sunrise_lab = Label(m)
+    sunrise_time = Label(m)
+    sunset_lab = Label(m)
+    sunset_time = Label(m)
+    sky=Label(m)
+    wind_speed=Label(m)
     show = Button(m,text="Show",command=previous_button)
     show.grid(row=1, column=1)
     next=Button(m)
