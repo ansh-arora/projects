@@ -1,4 +1,5 @@
 # projects
+--> PYTHON:
 1. Weather App:
 Fetches weather data using APIs and displays data of a given city for 3 days
 2. Cricket Score Notifier:
