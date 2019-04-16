@@ -56,9 +56,9 @@ def wallpapercount(wcount):
 
 
 def WallpaperAddress():
-    user_url = input("Enter URl : ")
+    user_url = input("Enter URl (from santabanta.com only) : ")
     if (user_url == ""):
-        url = "http://www.santabanta.com/wallpapers/categories/0/?order=popular"
+        url = "http://www.santabanta.com/wallpapers/indian-celebrities(m)/1/"
     else:
         url = user_url
         # url=urllib.request.urlopen("http://www.santabanta.com/wallpapers/indian-celebrities(f)/2/")
