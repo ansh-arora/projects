@@ -11,7 +11,7 @@ city1=''
 country1=''
 i=-1
 def url_builder(city_name):
-    user_api = 'xxxxxxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
+    user_api = 'cc16b20fbaa6f86f4708777632b093b9'  # Obtain yours form: http://openweathermap.org/
     unit = 'metric'  # For Fahrenheit use imperial, for Celsius use metric, and the default is Kelvin.
     api = 'http://api.openweathermap.org/data/2.5/weather?q='     # Search for your city ID here: http://bulk.openweathermap.org/sample/city.list.json.gz
 
@@ -57,7 +57,7 @@ def data_organizer(raw_api_dict):          #organizes data for current day
     return data
 
 def url_builder2(city_name):
-    user_api = 'xxxxxxxxxxxxxxxxxxxxxx'  # Obtain yours form: http://openweathermap.org/
+    user_api = 'cc16b20fbaa6f86f4708777632b093b9'  # Obtain yours form: http://openweathermap.org/
     unit = 'metric'  # For Fahrenheit use imperial, for Celsius use metric, and the default is Kelvin.
     api = 'http://api.openweathermap.org/data/2.5/forecast?q='  # Search for your city ID here: http://bulk.openweathermap.org/sample/city.list.json.gz
     full_api_url = api + str(city_name) + '&mode=json&units=' + unit + '&APPID=' + user_api
@@ -84,6 +84,7 @@ def data_organizer2(raw_list):      #organize data of next 3 days
     data = dict(
         date=re.sub(r' 00:00:00',"",raw_list[i]['dt_txt']),
         temp=raw_list[i]['main']['temp'],
+
         temp_max=raw_list[i]['main']['temp_max'],
         temp_min=raw_list[i]['main']['temp_min'],
         humidity=raw_list[i]['main']['humidity'],
@@ -104,7 +105,7 @@ def data_output2(data):
           bg='white').place(x=195, y=70)
 
     canvas.place(x=435, y=110)
-    if data['sky'] == 'Rain':
+    if data['sky'] == 'Rain' or data['sky']=='Thunderstorm':
         img1 = Image.open('rainy.png')
 
     elif data['sky'] == 'Clouds':
@@ -155,7 +156,7 @@ def data_output(data):
         Label(m,text='    ______________________________________________________________________________________________________    ',bg='white').place(x=195,y=70)
 
         canvas.place(x=455, y=110)
-        if data['sky']=='Rain':
+        if data['sky']=='Rain' or data['sky']=='Thunderstorm':
             img1 = Image.open('rainy.png')
 
         elif data['sky']=='Clouds':
